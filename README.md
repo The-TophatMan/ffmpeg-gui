@@ -1,2 +1,3 @@
 # ffmpeg-gui
-A simple program that gives ffmpeg a functioning GUI
+#AI written, we can work off this
+This project develops a graphical user interface (GUI) wrapper for the FFmpeg command-line tool to make common audio/video workflows more accessible and less error-prone. The application allows users to select input files, configure output formats, and apply operations such as trimming, converting, compressing, extracting audio, and basic filters without manually writing CLI commands. The system generates the corresponding FFmpeg command in real time, executes it, and presents progress and output logs to the user. By translating complex command syntax into guided controls and presets, the tool reduces the learning curve for FFmpeg while preserving the flexibility and performance of the underlying engine. The final deliverable includes the GUI application, reusable command-building logic, and test cases demonstrating correctness across typical media-processing tasks.
