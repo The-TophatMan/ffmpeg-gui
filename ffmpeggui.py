@@ -4,7 +4,7 @@
 __authors__ = "Benjamin Arent", "Christain Tuttle"
 __data__ = "3/10/2026"
 
-from PySide6 import QtCore, QtWidgets  # , QtGui
+from PySide6 import QtCore, QtWidgets
 import sys
 import subprocess
 
@@ -27,32 +27,43 @@ class FfmpegGui(QtWidgets.QWidget):
     def __init__(self) -> None:
         """Initialization of the GUI
         """
-        # Get ffmpeg
-        ffmpeg = subprocess.run(
-            ['ffmpeg', '-formats'], capture_output=True, text=True)
-        if ffmpeg.returncode == 127 or True:  # or True to test
-            # If ffmpeg not installed, pop-up requesting its installation
-            self.notin = QtWidgets.QMessageBox()
-            self.notin.setIcon(QtWidgets.QMessageBox.Icon.Critical)
-            self.notin.setText("Error")
-            self.notin.setInformativeText(
-                'FFMPEG was not found! Please install FFMPEG to continue')
-            self.notin.setWindowTitle("FFMPEG Not Found")
-            self.notin.setStandardButtons(
-                QtWidgets.QMessageBox.StandardButton.Close)
-            self.notin.addButton(
-                QtWidgets.QMessageBox.StandardButton.Help)
-            self.notin.resize(600, 200)
-            self.notin.exec()
-            exit()
         super().__init__()
-        self.input = QtWidgets.QLineEdit()
-        self.input_file = QtWidgets.QPushButton("Find File")
+        self.input_text = QtWidgets.QLabel('Input', self)
+        self.input = QtWidgets.QLineEdit(self)
+        self.input_file = QtWidgets.QPushButton(self)
+        self.input_file.setIcon(self.style().standardIcon(
+            QtWidgets.QStyle.StandardPixmap.SP_DialogOpenButton))
+        self.output_text = QtWidgets.QLabel('Output', self)
+        self.output = QtWidgets.QLineEdit()
+        self.output_format = QtWidgets.QComboBox()
+        self.ffmpeg = subprocess.run(
+            ['ffmpeg', '-formats'], capture_output=True, text=True)
+        self.supported_inputs: str = 'Supported Files ('
+        for i in self.ffmpeg.stdout.split('\n')[5:]:
+            try:
+                types = i[4::].split()[0].split(',')
+                for o in types:
+                    newtype = o.rsplit('_', 1)[0]
+                    if i[1] == 'D':
+                        self.supported_inputs += '*.' + newtype + ' '
+                    if i[2] == 'E':
+                        self.output_format.addItem('.' + newtype)
+            except IndexError:
+                pass
+        self.supported_inputs = self.supported_inputs[:-1] + ')'
         self.convert = QtWidgets.QPushButton("Convert")
-        self.lt = QtWidgets.QVBoxLayout(self)
-        self.lt.addWidget(self.input)
-        self.lt.addWidget(self.input_file)
-        self.lt.addWidget(self.convert)
+        self.primary = QtWidgets.QVBoxLayout(self)
+        self.input_box = QtWidgets.QHBoxLayout(self)
+        self.input_box.addWidget(self.input)
+        self.input_box.addWidget(self.input_file)
+        self.output_box = QtWidgets.QHBoxLayout(self)
+        self.output_box.addWidget(self.output)
+        self.output_box.addWidget(self.output_format)
+        self.primary.addWidget(self.input_text)
+        self.primary.addLayout(self.input_box)
+        self.primary.addWidget(self.output_text)
+        self.primary.addLayout(self.output_box)
+        self.primary.addWidget(self.convert)
         self.input_file.clicked.connect(self.promptinputfile)
         self.convert.clicked.connect(self.beginconversion)
 
@@ -71,8 +82,15 @@ class FfmpegGui(QtWidgets.QWidget):
     def promptinputfile(self) -> None:
         """Let's the user find a file via the file explorer
         """
-        self.fileprompt = QtWidgets.QFileDialog()
-        print(self.fileprompt.getOpenFileName())
+        fileprompt = QtWidgets.QFileDialog()
+        fileprompt.setNameFilter(self.supported_inputs)
+        fileprompt.exec()
+        try:
+            file = fileprompt.selectedFiles()[0]
+            self.input.setText(file)
+            self.output.setText(file.rsplit('.', 1)[0])
+        except IndexError:
+            pass
 
     @staticmethod
     def main() -> None:
