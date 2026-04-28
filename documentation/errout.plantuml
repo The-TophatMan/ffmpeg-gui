@@ -1,0 +1,9 @@
+@startuml ErrorOut
+title "UML Class Diagram"
+class ErrourOut {
+    .. Instance Variables ..
+        - _box: QMessageBox
+    .. Overloaded Methods ..
+        - __init__(): None
+}
+@enduml

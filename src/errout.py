@@ -19,8 +19,8 @@ class ErrorOut(QtWidgets.QWidget):
         """Initialize an error box
         """
         super().__init__()
-        self.box = QtWidgets.QMessageBox(self)
-        self.box.setIcon(QtWidgets.QMessageBox.Icon.Warning)
-        self.box.setWindowTitle('Error During Conversion')
-        self.box.setInformativeText(str(error))
-        self.box.exec()
+        self._box = QtWidgets.QMessageBox(self)
+        self._box.setIcon(QtWidgets.QMessageBox.Icon.Warning)
+        self._box.setWindowTitle('Error During Conversion')
+        self._box.setInformativeText(str(error))
+        self._box.exec()
