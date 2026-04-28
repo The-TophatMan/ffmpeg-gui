@@ -147,7 +147,6 @@ class FfmpegGui(QtWidgets.QWidget):
     def enable(self) -> None:
         """Shows the GUI
         """
-        self.resize(800, 600)
         self.show()
 
     @QtCore.Slot()
