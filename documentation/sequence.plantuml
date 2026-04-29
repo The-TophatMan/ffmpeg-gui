@@ -1,0 +1,26 @@
+@startuml ffmpeg_sequence
+scale 2
+title "UML Sequence Diagram - FFmpeg GUI Conversion"
+
+actor User
+
+User -> FfmpegGUI: Select input file
+
+User -> FfmpegGUI: Choose output format
+User -> FfmpegGUI: Click Convert
+
+
+FfmpegGUI -> Converter: run ffmpeg command
+
+Converter -> ConversionLog: add entry
+ConversionLog -> Converter: log stored
+
+Converter -> FfmpegGUI: conversion status returned
+
+FfmpegGUI -> User: show success/failure message
+
+User -> FfmpegGUI: View Conversion Log
+FfmpegGUI -> ConversionLog: ask to show window
+ConversionLog -> User: display log window
+
+@enduml

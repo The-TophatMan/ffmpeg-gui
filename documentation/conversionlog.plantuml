@@ -1,0 +1,17 @@
+@startuml ConversionLog
+title "UML Class Diagram"
+
+class ConversionLog {
+    .. Instance Variables ..
+        - _logs: list[str]
+
+    .. Overloaded Methods ..
+        + __init__(): None
+
+    .. Instance Methods ..
+        + add_entry(input_file: str, output_file: str, success: bool, message: str = ""): None
+        + formatted_logs(): str
+        + show_window( parent: QtWidgets.QWidget | None = None): None
+}
+
+@enduml
