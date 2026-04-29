@@ -1,7 +1,7 @@
 """A GUI for FFMPEG
 """
-
-__authors__ = "Benjamin Arent", "Christain Tuttle"
+print("RUNNING THIS EXACT FILE", flush=True)
+__authors__ = "Benjamin Arent", "Christian Tuttle"
 __created__ = "3/10/2026"
 __updated__ = "4/16/2026"
 
@@ -10,6 +10,7 @@ import sys
 import subprocess
 from installer import Installer
 from errout import ErrorOut
+from conversionlog import ConversionLog
 
 
 class FfmpegGui(QtWidgets.QWidget):
@@ -29,7 +30,20 @@ class FfmpegGui(QtWidgets.QWidget):
 
     def __init__(self) -> None:
         super().__init__()
+        #Check if FFmpeg is installed
+        result = subprocess.run(['ffmpeg', '-version'], capture_output=True)
+        if result.returncode != 0:
+            Installer()
+        self._logger = ConversionLog()
         self._main_layout = QtWidgets.QVBoxLayout(self)
+        self._top_bar = QtWidgets.QHBoxLayout()
+        self._top_bar.addStretch()
+        self._log_button = QtWidgets.QPushButton("View Logs")
+        self._log_button.clicked.connect(
+            lambda: self._logger.show_window(self)
+        )
+        self._top_bar.addWidget(self._log_button)
+        self._main_layout.addLayout(self._top_bar)
         # Input Section
         self._input_label = QtWidgets.QLabel('Input')
         self._input_text = QtWidgets.QLineEdit()
@@ -153,12 +167,31 @@ class FfmpegGui(QtWidgets.QWidget):
     def beginconversion(self) -> None:
         """Attempts the conversion
         """
-        output = subprocess.run(['ffmpeg', '-i', self._input_text.text(),
-                                 self._output_text.text() +
-                                 self._output_extension.itemText(self._output_extension.currentIndex())],
-                                capture_output=True, text=True)
+        input_file = self._input_text.text()
+        output_file = (
+            self._output_text.text() +
+            self._output_extension.itemText(
+                self._output_extension.currentIndex()
+            )
+        )
+
+        output = subprocess.run(
+            ['ffmpeg', '-i', input_file, output_file],
+            capture_output=True,
+            text=True
+        )
+
         if output.returncode != 0:
-            ErrorOut('\n'.join(output.stderr.splitlines()[18:]))
+            error_message = '\n'.join(output.stderr.splitlines()[18:])
+            self._logger.add_entry(
+                input_file,
+                output_file,
+                False,
+                error_message
+            )
+            ErrorOut(error_message)
+        else:
+            self._logger.add_entry(input_file, output_file, True)
 
     @QtCore.Slot()
     def promptinputfile(self) -> None:
@@ -178,9 +211,6 @@ class FfmpegGui(QtWidgets.QWidget):
     def main() -> None:
         """The main function for the GUI
         """
-        result = subprocess.run(['ffmpeg', '-version'], capture_output=True)
-        if result.returncode != 0:
-            installer = Installer()
         app = QtWidgets.QApplication([])
         gui = FfmpegGui()
         gui.enable()
@@ -188,4 +218,5 @@ class FfmpegGui(QtWidgets.QWidget):
 
 
 if __name__ == "__main__":
+    print("ENTERING __main__", flush=True)
     FfmpegGui.main()
