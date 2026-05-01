@@ -10,7 +10,7 @@ from alive_progress import alive_bar
 print("RUNNING THIS EXACT FILE", flush=True)
 __authors__ = "Benjamin Arent", "Christian Tuttle"
 __created__ = "3/10/2026"
-__updated__ = "4/16/2026"
+__updated__ = "5/01/2026"
 
 
 class FfmpegGui(QtWidgets.QWidget):
@@ -99,7 +99,7 @@ class FfmpegGui(QtWidgets.QWidget):
                 unclean_formats.append(o)
         unclean_formats = list(dict.fromkeys(unclean_formats))
         input_formats: list[str] = []
-        with alive_bar(len(unclean_formats)) as bar:
+        with alive_bar(len(unclean_formats)) as bar:  # type: ignore
             for i in unclean_formats:
                 support = subprocess.run(
                     ['ffmpeg', '-h', f'demuxer={i}'],
@@ -145,7 +145,7 @@ class FfmpegGui(QtWidgets.QWidget):
                 unclean_formats.append(o)
         unclean_formats = list(dict.fromkeys(unclean_formats))
         output_formats: list[str] = []
-        with alive_bar(len(unclean_formats)) as bar:
+        with alive_bar(len(unclean_formats)) as bar:  # type: ignore
             for i in unclean_formats:
                 support = subprocess.run(
                     ['ffmpeg', '-h', f'muxer={i}'], capture_output=True, text=True)
