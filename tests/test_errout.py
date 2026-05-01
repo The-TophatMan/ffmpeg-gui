@@ -9,7 +9,7 @@ from errout import ErrorOut
 
 
 def test_error_popup_is_shown() -> None:
-    """Test that ErrorOut displays a popup with the error message."""
+    """Test that ErrorOut displays a popup w/ error message"""
     app = QtWidgets.QApplication.instance()
 
     if app is None:

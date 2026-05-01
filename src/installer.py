@@ -61,7 +61,7 @@ class Installer(QtWidgets.QWidget):
         """Run an install command with a progress dialog."""
         progress = QtWidgets.QProgressDialog(
             "Installing FFmpeg...",
-            None,
+            "",
             0,
             0,
             self,
