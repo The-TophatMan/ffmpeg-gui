@@ -15,7 +15,9 @@ class ErrorOut(QtWidgets.QWidget):
         QtWidgets (_type_): Parent class to create a widget
     """
 
-    def __init__(self, error: 'str | Exception' = 'No information given') -> None:
+    def __init__(
+            self,
+            error: 'str | Exception' = 'No information given') -> None:
         """Initialize an error box
         """
         super().__init__()

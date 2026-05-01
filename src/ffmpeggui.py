@@ -1,16 +1,15 @@
 """A GUI for FFMPEG
 """
+from conversionlog import ConversionLog
+from errout import ErrorOut
+from installer import Installer
+import subprocess
+import sys
+from PySide6 import QtCore, QtWidgets
 print("RUNNING THIS EXACT FILE", flush=True)
 __authors__ = "Benjamin Arent", "Christian Tuttle"
 __created__ = "3/10/2026"
 __updated__ = "4/16/2026"
-
-from PySide6 import QtCore, QtWidgets
-import sys
-import subprocess
-from installer import Installer
-from errout import ErrorOut
-from conversionlog import ConversionLog
 
 
 class FfmpegGui(QtWidgets.QWidget):
@@ -30,7 +29,7 @@ class FfmpegGui(QtWidgets.QWidget):
 
     def __init__(self) -> None:
         super().__init__()
-        #Check if FFmpeg is installed
+        # Check if FFmpeg is installed
         result = subprocess.run(['ffmpeg', '-version'], capture_output=True)
         if result.returncode != 0:
             Installer()
@@ -47,8 +46,8 @@ class FfmpegGui(QtWidgets.QWidget):
         # Input Section
         self._input_label = QtWidgets.QLabel('Input')
         self._input_text = QtWidgets.QLineEdit()
-        self._input_dialog = QtWidgets.QPushButton(
-            self.style().standardIcon(QtWidgets.QStyle.StandardPixmap.SP_DialogOpenButton), '')
+        self._input_dialog = QtWidgets.QPushButton(self.style().standardIcon(
+            QtWidgets.QStyle.StandardPixmap.SP_DialogOpenButton), '')
         self._input_dialog.clicked.connect(self.promptinputfile)
         self._input_horizontal = QtWidgets.QHBoxLayout()
         self._input_horizontal.addWidget(self._input_text)
@@ -100,7 +99,8 @@ class FfmpegGui(QtWidgets.QWidget):
         input_formats: list[str] = []
         for i in unclean_formats:
             support = subprocess.run(
-                ['ffmpeg', '-h', f'demuxer={i}'], capture_output=True, text=True)
+                ['ffmpeg', '-h', f'demuxer={i}'],
+                capture_output=True, text=True)
             try:
                 ext = support.stdout.splitlines()[1]
             except IndexError:

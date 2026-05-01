@@ -8,7 +8,12 @@ class ConversionLog:
     def __init__(self) -> None:
         self._logs: list[str] = []
 
-    def add_entry(self, input_file: str, output_file: str, success: bool, message: str = "") -> None:
+    def add_entry(
+            self,
+            input_file: str,
+            output_file: str,
+            success: bool,
+            message: str = "") -> None:
         """Add a conversion log entry."""
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         status = "SUCCESS" if success else "FAILURE"
