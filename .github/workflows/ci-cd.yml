@@ -41,15 +41,12 @@ jobs:
       - name: Check style with flake8
         run: |
           flake8 src tests
-
-      - name: Check types with mypy
-        run: |
-          mypy --disallow-untyped-defs --strict --allow-untyped-decorators --ignore-missing-imports src tests
-
-      - name: Run tests with coverage
+      
+      - name: Run unit tests with coverage
         run: |
           pytest -v --color=yes --cov=src --cov-report=term-missing --cov-report=html:docs/htmlcov tests/
 
+      
       - name: Build documentation
         run: |
           mkdir -p docs

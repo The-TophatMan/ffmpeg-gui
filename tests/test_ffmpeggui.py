@@ -202,7 +202,8 @@ def test_promptinputfile_sets_input_and_output_text(
     gui = FfmpegGui()
     gui.promptinputfile()
 
-    mock_dialog.setNameFilter.assert_called_once_with("Supported Files (*.mp4)")
+    mock_dialog.setNameFilter.assert_called_once_with(
+        "Supported Files (*.mp4)")
     mock_dialog.exec.assert_called_once()
 
     assert gui._input_text.text() == "videos/example.mp4"
