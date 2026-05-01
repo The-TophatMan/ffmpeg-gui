@@ -1,11 +1,12 @@
 """A GUI for FFMPEG
 """
+from PySide6 import QtCore, QtWidgets
 from conversionlog import ConversionLog
 from errout import ErrorOut
 from installer import Installer
 import subprocess
 import sys
-from PySide6 import QtCore, QtWidgets
+from alive_progress import alive_bar
 print("RUNNING THIS EXACT FILE", flush=True)
 __authors__ = "Benjamin Arent", "Christian Tuttle"
 __created__ = "3/10/2026"
@@ -84,6 +85,7 @@ class FfmpegGui(QtWidgets.QWidget):
         Returns:
             list[str]: The full list of extensions
         """
+        print('Getting supported inputs...')
         all_formats = subprocess.run(
             ['ffmpeg', '-formats'], capture_output=True, text=True)
         unclean_formats: list[str] = []
@@ -97,27 +99,31 @@ class FfmpegGui(QtWidgets.QWidget):
                 unclean_formats.append(o)
         unclean_formats = list(dict.fromkeys(unclean_formats))
         input_formats: list[str] = []
-        for i in unclean_formats:
-            support = subprocess.run(
-                ['ffmpeg', '-h', f'demuxer={i}'],
-                capture_output=True, text=True)
-            try:
-                ext = support.stdout.splitlines()[1]
-            except IndexError:
-                continue
-            ext = ext.strip().split()
-            if not ext:
-                continue
-            if ext[0] == 'Common':
-                ext_list = ext[2].split(',')
-                if len(ext_list) > 0:
-                    for o in ext_list:
-                        input_formats.append(o.strip('.'))
-                else:
-                    input_formats.append(ext[2].strip('.'))
-            elif ext[1] == 'demuxer':
-                input_formats.append(i.rsplit('_')[0])
-            input_formats = list(dict.fromkeys(input_formats))
+        with alive_bar(len(unclean_formats)) as bar:
+            for i in unclean_formats:
+                support = subprocess.run(
+                    ['ffmpeg', '-h', f'demuxer={i}'],
+                    capture_output=True, text=True)
+                try:
+                    ext = support.stdout.splitlines()[1]
+                except IndexError:
+                    bar()
+                    continue
+                ext = ext.strip().split()
+                if not ext:
+                    bar()
+                    continue
+                if ext[0] == 'Common':
+                    ext_list = ext[2].split(',')
+                    if len(ext_list) > 0:
+                        for o in ext_list:
+                            input_formats.append(o.strip('.'))
+                    else:
+                        input_formats.append(ext[2].strip('.'))
+                elif ext[1] == 'demuxer':
+                    input_formats.append(i.rsplit('_')[0])
+                input_formats = list(dict.fromkeys(input_formats))
+                bar()
         return input_formats
 
     def supported_outputs(self) -> list[str]:
@@ -126,6 +132,7 @@ class FfmpegGui(QtWidgets.QWidget):
         Returns:
             list[str]: All supported output extensions
         """
+        print('Getting supported outputs...')
         all_formats = subprocess.run(
             ['ffmpeg', '-formats'], capture_output=True, text=True)
         unclean_formats: list[str] = []
@@ -138,24 +145,29 @@ class FfmpegGui(QtWidgets.QWidget):
                 unclean_formats.append(o)
         unclean_formats = list(dict.fromkeys(unclean_formats))
         output_formats: list[str] = []
-        for i in unclean_formats:
-            support = subprocess.run(
-                ['ffmpeg', '-h', f'muxer={i}'], capture_output=True, text=True)
-            try:
-                ext = support.stdout.splitlines()[1]
-            except IndexError:
-                continue
-            ext = ext.strip().split()
-            if not ext:
-                continue
-            if ext[0] != 'Common':
-                continue
-            ext_list = ext[2].split(',')[:-1]
-            if len(ext_list) > 0:
-                for o in ext_list:
-                    output_formats.append(o.strip('.'))
-            else:
-                output_formats.append(ext[2].strip('.'))
+        with alive_bar(len(unclean_formats)) as bar:
+            for i in unclean_formats:
+                support = subprocess.run(
+                    ['ffmpeg', '-h', f'muxer={i}'], capture_output=True, text=True)
+                try:
+                    ext = support.stdout.splitlines()[1]
+                except IndexError:
+                    bar()
+                    continue
+                ext = ext.strip().split()
+                if not ext:
+                    bar()
+                    continue
+                if ext[0] != 'Common':
+                    bar()
+                    continue
+                ext_list = ext[2].split(',')[:-1]
+                if len(ext_list) > 0:
+                    for o in ext_list:
+                        output_formats.append(o.strip('.'))
+                else:
+                    output_formats.append(ext[2].strip('.'))
+                bar()
         return sorted(list(dict.fromkeys(output_formats)))
 
     def enable(self) -> None:
