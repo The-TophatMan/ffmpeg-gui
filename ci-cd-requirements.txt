@@ -4,3 +4,4 @@ hypothesis
 pytest-cov
 mypy
 flake8
+alive-progress
