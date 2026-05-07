@@ -13,7 +13,7 @@ fix-style:
 	autopep8 --in-place --recursive --aggressive --aggressive src tests
 
 check-type:
-	PYTHONPATH=$(PYTHONPATH) mypy --disallow-untyped-defs --strict src tests
+	MYPYPATH=src PYTHONPATH=src mypy --disallow-untyped-defs --strict src tests
 
 unittest:
 	QT_QPA_PLATFORM=$(QT_QPA_PLATFORM) PYTHONPATH=$(PYTHONPATH) pytest -v tests/

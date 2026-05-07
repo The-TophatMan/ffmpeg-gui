@@ -1,0 +1,34 @@
+@startuml
+title Logical View - FFmpeg GUI
+
+class FfmpegGui {
+    - _logger: ConversionLog
+    + beginconversion(): None
+    + promptinputfile(): None
+    + supported_inputs(): list[str]
+    + supported_outputs(): list[str]
+}
+
+class ConversionLog {
+    - _logs: list[str]
+    + add_entry(): None
+    + formatted_logs(): str
+    + show_window(): None
+}
+
+class Installer {
+    + installffmpeg(): None
+}
+
+class ErrorOut {
+    + __init__(error): None
+}
+
+
+
+FfmpegGui *-- ConversionLog
+FfmpegGui ..> Installer
+FfmpegGui ..> ErrorOut
+
+
+@enduml

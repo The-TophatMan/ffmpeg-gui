@@ -89,39 +89,48 @@ class FfmpegGui(QtWidgets.QWidget):
         all_formats = subprocess.run(
             ['ffmpeg', '-formats'], capture_output=True, text=True)
         unclean_formats: list[str] = []
-        for i in all_formats.stdout.splitlines()[5::]:
-            i = i.strip()
-            if i[0] != 'D':
+        for line in all_formats.stdout.splitlines()[5::]:
+            stripped_line = line.strip()
+
+            if stripped_line[0] != 'D':
                 continue
-            i = i[4::]
-            i = i.split(' ')[0].split(',')
-            for o in i:
+
+            format_section = stripped_line[4::]
+            format_parts = format_section.split(' ')[0].split(',')
+
+            for o in format_parts:
                 unclean_formats.append(o)
         unclean_formats = list(dict.fromkeys(unclean_formats))
         input_formats: list[str] = []
-        with alive_bar(len(unclean_formats)) as bar:  # type: ignore
+        with alive_bar(len(unclean_formats)) as bar:
             for i in unclean_formats:
                 support = subprocess.run(
-                    ['ffmpeg', '-h', f'demuxer={i}'],
-                    capture_output=True, text=True)
+                    ["ffmpeg", "-h", f"demuxer={i}"],
+                    capture_output=True,
+                    text=True,
+                )
+
                 try:
-                    ext = support.stdout.splitlines()[1]
+                    ext_line = support.stdout.splitlines()[1]
                 except IndexError:
                     bar()
                     continue
-                ext = ext.strip().split()
-                if not ext:
+
+                ext_parts = ext_line.strip().split()
+
+                if not ext_parts:
                     bar()
                     continue
-                if ext[0] == 'Common':
-                    ext_list = ext[2].split(',')
-                    if len(ext_list) > 0:
-                        for o in ext_list:
-                            input_formats.append(o.strip('.'))
-                    else:
-                        input_formats.append(ext[2].strip('.'))
-                elif ext[1] == 'demuxer':
-                    input_formats.append(i.rsplit('_')[0])
+
+                if ext_parts[0] == "Common":
+                    ext_list = ext_parts[2].split(",")
+
+                    for o in ext_list:
+                        input_formats.append(o.strip("."))
+
+                elif len(ext_parts) > 1 and ext_parts[1] == "demuxer":
+                    input_formats.append(i.rsplit("_")[0])
+
                 input_formats = list(dict.fromkeys(input_formats))
                 bar()
         return input_formats
@@ -136,37 +145,47 @@ class FfmpegGui(QtWidgets.QWidget):
         all_formats = subprocess.run(
             ['ffmpeg', '-formats'], capture_output=True, text=True)
         unclean_formats: list[str] = []
-        for i in all_formats.stdout.splitlines()[5::]:
-            i = i.strip()
-            if i[1] != 'E':
+        for line in all_formats.stdout.splitlines()[5::]:
+            stripped_line = line.strip()
+            if stripped_line[1] != 'E':
                 continue
-            i = i[4::].rsplit()
-            for o in i:
+            format_parts = stripped_line[4::].rsplit()
+            for o in format_parts:
                 unclean_formats.append(o)
         unclean_formats = list(dict.fromkeys(unclean_formats))
         output_formats: list[str] = []
-        with alive_bar(len(unclean_formats)) as bar:  # type: ignore
+        with alive_bar(len(unclean_formats)) as bar:
             for i in unclean_formats:
                 support = subprocess.run(
-                    ['ffmpeg', '-h', f'muxer={i}'], capture_output=True, text=True)
+                    ["ffmpeg", "-h", f"muxer={i}"],
+                    capture_output=True,
+                    text=True,
+                )
+
                 try:
-                    ext = support.stdout.splitlines()[1]
+                    ext_line = support.stdout.splitlines()[1]
                 except IndexError:
                     bar()
                     continue
-                ext = ext.strip().split()
-                if not ext:
+
+                ext_parts = ext_line.strip().split()
+
+                if not ext_parts:
                     bar()
                     continue
-                if ext[0] != 'Common':
+
+                if ext_parts[0] != "Common":
                     bar()
                     continue
-                ext_list = ext[2].split(',')[:-1]
-                if len(ext_list) > 0:
+
+                ext_list = ext_parts[2].split(",")[:-1]
+
+                if ext_list:
                     for o in ext_list:
-                        output_formats.append(o.strip('.'))
+                        output_formats.append(o.strip("."))
                 else:
-                    output_formats.append(ext[2].strip('.'))
+                    output_formats.append(ext_parts[2].strip("."))
+
                 bar()
         return sorted(list(dict.fromkeys(output_formats)))
 

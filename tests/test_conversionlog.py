@@ -25,7 +25,7 @@ def get_qapp() -> QtWidgets.QApplication:
     output_file=st.text(min_size=1, max_size=30),
     success=st.booleans(),
 )
-def test_add_entry_stores_basic_conversion(
+def test_conversionlog_one(
     input_file: str,
     output_file: str,
     success: bool,
@@ -51,7 +51,7 @@ def test_add_entry_stores_basic_conversion(
     output_file=st.text(min_size=1, max_size=30),
     message=st.text(min_size=1, max_size=50),
 )
-def test_add_entry_stores_error_message(
+def test_conversionlog_two(
     input_file: str,
     output_file: str,
     message: str,
@@ -69,14 +69,14 @@ def test_add_entry_stores_error_message(
     assert message in formatted
 
 
-def test_formatted_logs_empty_message() -> None:
+def test_conversionlog_three() -> None:
     """Test formatted_logs returns default message when no logs exist."""
     log = ConversionLog()
 
     assert log.formatted_logs() == "No conversions have happened yet."
 
 
-def test_formatted_logs_multiple_entries() -> None:
+def test_conversionlog_four() -> None:
     """Test formatted_logs separates multiple entries with blank lines."""
     log = ConversionLog()
 
@@ -99,7 +99,7 @@ def test_formatted_logs_multiple_entries() -> None:
 @patch("conversionlog.QtWidgets.QTextEdit")
 @patch("conversionlog.QtWidgets.QPushButton")
 @patch("conversionlog.QtWidgets.QVBoxLayout")
-def test_show_window_displays_logs(
+def test_conversionlog_five(
     mock_layout_class: MagicMock,
     mock_button_class: MagicMock,
     mock_text_edit_class: MagicMock,

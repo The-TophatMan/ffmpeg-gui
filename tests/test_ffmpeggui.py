@@ -24,11 +24,8 @@ def get_qapp() -> QtWidgets.QApplication:
     return QtWidgets.QApplication(sys.argv)
 
 
-def fake_process(
-    returncode: int = 0,
-    stdout: str = "",
-    stderr: str = "",
-) -> MagicMock:
+def fake_process(returncode: int = 0, stdout: str = "",
+                 stderr: str = "") -> MagicMock:
     """Create a fake subprocess result."""
     result = MagicMock()
     result.returncode = returncode
@@ -45,7 +42,7 @@ def reset_singleton() -> None:
 @patch.object(FfmpegGui, "supported_inputs", return_value=["mp4", "mov"])
 @patch.object(FfmpegGui, "supported_outputs", return_value=["mp3", "wav"])
 @patch("ffmpeggui.subprocess.run")
-def test_gui_initializes(
+def test_one(
     mock_run: MagicMock,
     mock_outputs: MagicMock,
     mock_inputs: MagicMock,
@@ -67,7 +64,7 @@ def test_gui_initializes(
     assert gui._output_extension.itemText(1) == ".wav"
 
 
-def test_gui_is_singleton() -> None:
+def test_ffmpeggui_two() -> None:
     """Test that __new__ returns the same instance."""
     reset_singleton()
 
@@ -81,7 +78,7 @@ def test_gui_is_singleton() -> None:
 @patch.object(FfmpegGui, "supported_outputs", return_value=["mp3"])
 @patch("ffmpeggui.Installer")
 @patch("ffmpeggui.subprocess.run")
-def test_installer_runs_when_ffmpeg_missing(
+def test_ffmpeggui_three(
     mock_run: MagicMock,
     mock_installer: MagicMock,
     mock_outputs: MagicMock,
@@ -101,7 +98,7 @@ def test_installer_runs_when_ffmpeg_missing(
 @patch.object(FfmpegGui, "supported_inputs", return_value=["mp4"])
 @patch.object(FfmpegGui, "supported_outputs", return_value=["mp3"])
 @patch("ffmpeggui.subprocess.run")
-def test_beginconversion_success_logs_success(
+def test_ffmpeggui_four(
     mock_run: MagicMock,
     mock_outputs: MagicMock,
     mock_inputs: MagicMock,
@@ -141,7 +138,7 @@ def test_beginconversion_success_logs_success(
 @patch.object(FfmpegGui, "supported_outputs", return_value=["mp3"])
 @patch("ffmpeggui.ErrorOut")
 @patch("ffmpeggui.subprocess.run")
-def test_beginconversion_failure_logs_error_and_shows_popup(
+def test_ffmpeggui_five(
     mock_run: MagicMock,
     mock_errorout: MagicMock,
     mock_outputs: MagicMock,
@@ -183,7 +180,7 @@ def test_beginconversion_failure_logs_error_and_shows_popup(
 @patch.object(FfmpegGui, "supported_outputs", return_value=["mp3"])
 @patch("ffmpeggui.QtWidgets.QFileDialog")
 @patch("ffmpeggui.subprocess.run")
-def test_promptinputfile_sets_input_and_output_text(
+def test_ffmpeggui_six(
     mock_run: MagicMock,
     mock_file_dialog_class: MagicMock,
     mock_outputs: MagicMock,
@@ -214,7 +211,7 @@ def test_promptinputfile_sets_input_and_output_text(
 @patch.object(FfmpegGui, "supported_outputs", return_value=["mp3"])
 @patch("ffmpeggui.QtWidgets.QFileDialog")
 @patch("ffmpeggui.subprocess.run")
-def test_promptinputfile_handles_no_selected_file(
+def test_ffmpeggui_seven(
     mock_run: MagicMock,
     mock_file_dialog_class: MagicMock,
     mock_outputs: MagicMock,
@@ -243,7 +240,7 @@ def test_promptinputfile_handles_no_selected_file(
 @patch.object(FfmpegGui, "supported_inputs", return_value=["mp4"])
 @patch.object(FfmpegGui, "supported_outputs", return_value=["mp3"])
 @patch("ffmpeggui.subprocess.run")
-def test_enable_shows_gui(
+def test_ffmpeggui_eight(
     mock_run: MagicMock,
     mock_outputs: MagicMock,
     mock_inputs: MagicMock,
@@ -263,7 +260,7 @@ def test_enable_shows_gui(
 
 
 @patch("ffmpeggui.subprocess.run")
-def test_supported_inputs_returns_extensions(mock_run: MagicMock) -> None:
+def test_ffmpeggui_nine(mock_run: MagicMock) -> None:
     """Test that supported_inputs parses FFmpeg input formats."""
     get_qapp()
     reset_singleton()
@@ -301,7 +298,7 @@ def test_supported_inputs_returns_extensions(mock_run: MagicMock) -> None:
 
 
 @patch("ffmpeggui.subprocess.run")
-def test_supported_inputs_skips_bad_demuxer_output(
+def test_ffmpeggui_ten(
     mock_run: MagicMock,
 ) -> None:
     """Test supported_inputs handles incomplete demuxer output."""
@@ -334,7 +331,7 @@ def test_supported_inputs_skips_bad_demuxer_output(
 
 
 @patch("ffmpeggui.subprocess.run")
-def test_supported_outputs_returns_extensions(mock_run: MagicMock) -> None:
+def test_ffmpeggui_eleven(mock_run: MagicMock) -> None:
     """Test that supported_outputs parses FFmpeg output formats."""
     get_qapp()
     reset_singleton()
@@ -370,7 +367,7 @@ def test_supported_outputs_returns_extensions(mock_run: MagicMock) -> None:
 
 
 @patch("ffmpeggui.subprocess.run")
-def test_supported_outputs_skips_bad_muxer_output(
+def test_ffmpeggui_twelve(
     mock_run: MagicMock,
 ) -> None:
     """Test supported_outputs handles incomplete muxer output."""
@@ -419,7 +416,7 @@ safe_text = st.text(
 @patch.object(FfmpegGui, "supported_inputs", return_value=["mp4"])
 @patch.object(FfmpegGui, "supported_outputs", return_value=["mp3"])
 @patch("ffmpeggui.subprocess.run")
-def test_beginconversion_uses_generated_file_names(
+def test_ffmpeggui_thirteen(
     mock_run: MagicMock,
     mock_outputs: MagicMock,
     mock_inputs: MagicMock,

@@ -1,0 +1,40 @@
+@startuml
+title Development View - FFmpeg GUI
+
+package "src" {
+    class FfmpegGui
+    class ConversionLog
+    class Installer
+    class ErrorOut
+}
+
+package "tests" {
+    class TestFfmpegGui
+    class TestConversionLog
+    class TestInstaller
+    class TestErrorOut
+}
+
+package "External Dependencies" {
+    class PySide6
+    class FFmpeg
+    class subprocess
+}
+
+FfmpegGui ..> ConversionLog
+FfmpegGui ..> Installer
+FfmpegGui ..> ErrorOut
+FfmpegGui ..> subprocess
+FfmpegGui ..> FFmpeg
+
+Installer ..> subprocess
+Installer ..> PySide6
+ErrorOut ..> PySide6
+ConversionLog ..> PySide6
+
+TestFfmpegGui ..> FfmpegGui
+TestConversionLog ..> ConversionLog
+TestInstaller ..> Installer
+TestErrorOut ..> ErrorOut
+
+@enduml

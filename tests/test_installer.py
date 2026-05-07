@@ -8,7 +8,6 @@ from PySide6 import QtWidgets
 
 from installer import Installer
 
-
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 
@@ -30,7 +29,7 @@ def make_installer_without_prompt() -> Installer:
     return installer
 
 
-def test_installer_starts_prompt() -> None:
+def test_installer_one() -> None:
     """Test that Installer calls _prompt_install during initialization."""
     get_qapp()
 
@@ -40,7 +39,7 @@ def test_installer_starts_prompt() -> None:
     mock_prompt.assert_called_once()
 
 
-def test_prompt_install_runs_install_when_install_button_clicked() -> None:
+def test_installer_two() -> None:
     """Test that clicking Install FFmpeg calls install_ffmpeg."""
     get_qapp()
 
@@ -72,7 +71,7 @@ def test_prompt_install_runs_install_when_install_button_clicked() -> None:
     mock_install.assert_called_once()
 
 
-def test_prompt_install_quits_when_close_clicked() -> None:
+def test_installer_three() -> None:
     """Test that closing the prompt quits the application."""
     get_qapp()
 
@@ -98,7 +97,7 @@ def test_prompt_install_quits_when_close_clicked() -> None:
     mock_quit.assert_called_once()
 
 
-def test_install_ffmpeg_windows_shows_manual_install_message() -> None:
+def test_installer_four() -> None:
     """Test that Windows shows a manual installation message."""
     get_qapp()
 
@@ -116,7 +115,7 @@ def test_install_ffmpeg_windows_shows_manual_install_message() -> None:
     assert "https://ffmpeg.org/download.html" in args[1]
 
 
-def test_install_ffmpeg_linux_runs_apt_command() -> None:
+def test_installer_five() -> None:
     """Test that Linux runs the apt install command."""
     get_qapp()
 
@@ -131,7 +130,7 @@ def test_install_ffmpeg_linux_runs_apt_command() -> None:
     )
 
 
-def test_install_ffmpeg_macos_runs_brew_command() -> None:
+def test_installer_six() -> None:
     """Test that macOS runs the brew install command."""
     get_qapp()
 
@@ -144,7 +143,7 @@ def test_install_ffmpeg_macos_runs_brew_command() -> None:
     mock_run_install.assert_called_once_with(["brew", "install", "ffmpeg"])
 
 
-def test_install_ffmpeg_unsupported_platform_shows_message() -> None:
+def test_installer_seven() -> None:
     """Test that unsupported platforms show an unsupported message."""
     get_qapp()
 
@@ -160,7 +159,7 @@ def test_install_ffmpeg_unsupported_platform_shows_message() -> None:
     )
 
 
-def test_run_install_runs_command_and_shows_complete_message() -> None:
+def test_installer_eight() -> None:
     """Test that _run_install runs command and shows completion message."""
     get_qapp()
 
@@ -193,7 +192,7 @@ def test_run_install_runs_command_and_shows_complete_message() -> None:
     )
 
 
-def test_show_info_displays_message_box() -> None:
+def test_installer_nine() -> None:
     """Test that _show_info creates and displays an information message."""
     get_qapp()
 

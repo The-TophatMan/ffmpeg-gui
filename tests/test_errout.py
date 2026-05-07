@@ -8,7 +8,7 @@ from PySide6 import QtWidgets
 from errout import ErrorOut
 
 
-def test_error_popup_is_shown() -> None:
+def test_error() -> None:
     """Test that ErrorOut displays a popup w/ error message"""
     app = QtWidgets.QApplication.instance()
 

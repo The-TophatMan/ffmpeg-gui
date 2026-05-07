@@ -1,0 +1,23 @@
+@startuml
+title Physical View - FFmpeg GUI
+
+node "User Computer" {
+    node "Python Environment" {
+        artifact "FFmpeg GUI App"
+        artifact "PySide6 Library"
+    }
+
+    artifact "FFmpeg Executable"
+
+    database "Local Files" {
+        artifact "Input Media File"
+        artifact "Converted Output File"
+    }
+}
+
+"FFmpeg GUI App" --> "PySide6 Library"
+"FFmpeg GUI App" --> "FFmpeg Executable"
+"FFmpeg GUI App" --> "Local File System"
+
+@enduml
+

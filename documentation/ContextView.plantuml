@@ -1,0 +1,22 @@
+@startuml
+title Context View - FFmpeg GUI Use Cases
+
+actor User
+
+rectangle "FFmpeg GUI Application" {
+    usecase "Select Input File" as UC1
+    usecase "Choose Output Format" as UC2
+    usecase "Convert File" as UC3
+    usecase "View Conversion Logs" as UC4
+    usecase "View Error Message" as UC5
+}
+
+User --> UC1
+User --> UC2
+User --> UC3
+User --> UC4
+
+UC3 --> UC5 : if conversion fails
+
+
+@enduml
