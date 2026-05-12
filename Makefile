@@ -4,7 +4,7 @@ QT_QPA_PLATFORM = offscreen
 
 .PHONY: all check-style fix-style check-type unittest test-coverage create-docs clean
 
-all: check-style check-type test-coverage create-docs clean
+all: check-style check-type test-coverage clean
 
 check-style:
 	flake8 src tests
